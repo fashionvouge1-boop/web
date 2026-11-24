@@ -331,3 +331,63 @@ p { margin: 0 0 .6rem; }
     .form-grid { grid-template-columns: 1fr; }
     .admin-content { padding: 1rem; }
 }
+
+/* =====================================================================
+   Mobile polish — admin panel on phones
+   ===================================================================== */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body.admin { overflow-wrap: break-word; }
+a, button, label { -webkit-tap-highlight-color: transparent; }
+
+/* Modern mobile viewport height (avoids the iOS toolbar gap) */
+.admin-side { height: 100dvh; }
+
+@media (max-width: 760px) {
+    /* Stop iOS from zooming when a field is focused */
+    .field input, .field select, .field textarea,
+    .filters-bar input, .filters-bar select,
+    .check input { font-size: 16px; }
+
+    .admin-content { padding: 1.1rem; }
+    .admin-top { padding: .75rem 1rem; gap: .55rem; }
+    .admin-top__title { font-size: 1.02rem; }
+    .panel { padding: 1.05rem; }
+    .stat-grid { gap: .8rem; }
+}
+
+@media (max-width: 640px) {
+    /* Image rows stack: inputs full width, remove button on the side */
+    .img-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: .5rem;
+        align-items: center;
+    }
+    .img-row .img-row__url { grid-column: 1; min-width: 0; }
+    .img-row__remove { grid-column: 2; grid-row: 1 / span 2; }
+
+    /* Filter bars: full-width, stacked controls */
+    .filters-bar { flex-direction: column; align-items: stretch; }
+    .filters-bar .field { width: 100%; }
+    .filters-bar .field input,
+    .filters-bar .field select { width: 100%; }
+    .filters-bar .btn { width: 100%; }
+
+    .row-actions .btn { flex: 1; }
+    .panel__head { gap: .6rem; }
+}
+
+@media (max-width: 520px) {
+    .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+    .stat { padding: .9rem 1rem; }
+    .stat__num { font-size: 1.4rem; }
+    .stat__label { font-size: .72rem; }
+
+    .admin-top__user span { display: none; }
+    .admin-login { padding: 1rem; }
+    .admin-login__card { padding: 1.5rem; }
+    .detail-grid { gap: 1rem; }
+    .item-row { gap: .6rem; }
+    .item-row img { width: 46px; height: 56px; }
+    .check { padding: .5rem .8rem; }
+}

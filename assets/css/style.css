@@ -2404,3 +2404,295 @@ button {
         grid-template-columns: 1fr
     }
 }
+
+
+/* =====================================================================
+   Mobile polish — make every screen fit phones comfortably
+   ===================================================================== */
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%
+}
+
+body {
+    overflow-wrap: break-word
+}
+
+a,
+button,
+label {
+    -webkit-tap-highlight-color: transparent
+}
+
+.table-wrap {
+    -webkit-overflow-scrolling: touch
+}
+
+
+/* Medium phones / tablets */
+
+@media (max-width:760px) {
+    /* Never let iOS zoom in when an input is focused */
+    input,
+    select,
+    textarea,
+    .field input,
+    .field select,
+    .field textarea,
+    .header__search input,
+    .toolbar select,
+    .price-row input {
+        font-size: 16px
+    }
+    .section {
+        padding: 1.9rem 0
+    }
+    .section__head {
+        margin-bottom: 1.2rem
+    }
+    /* Header: keep everything on one comfortable row */
+    .header__inner {
+        gap: .5rem;
+        padding: .6rem 0
+    }
+    .header__search {
+        min-width: 0;
+        margin-top: .35rem
+    }
+    .header__actions {
+        gap: .15rem
+    }
+    .icon-btn {
+        padding: .55rem
+    }
+    .logo {
+        font-size: 1.15rem;
+        gap: .45rem
+    }
+    .hero {
+        margin: 1rem 0 1.8rem
+    }
+    .hero__content {
+        padding: 1.8rem 1.4rem
+    }
+    .hero__content p {
+        font-size: .96rem
+    }
+    /* Product grid: always two tidy columns */
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .8rem
+    }
+    .card__body {
+        padding: .8rem .85rem 1rem
+    }
+    .card__title {
+        font-size: .92rem
+    }
+    .price-now {
+        font-size: 1rem
+    }
+    .card__actions {
+        flex-direction: column;
+        gap: .4rem
+    }
+    /* Cart & checkout breathe better stacked */
+    .cart-layout,
+    .checkout-layout {
+        gap: 1.4rem
+    }
+    .panel {
+        padding: 1.15rem
+    }
+    .step-list {
+        gap: .55rem;
+        font-size: .76rem
+    }
+    .trust-strip {
+        margin: 1.4rem 0
+    }
+    .newsletter {
+        padding: 1.9rem 1.4rem;
+        margin: 1.5rem 0
+    }
+    .newsletter h2 {
+        font-size: 1.4rem
+    }
+}
+
+
+/* Small phones */
+
+@media (max-width:520px) {
+    .container {
+        width: min(1200px, 94%)
+    }
+    h1 {
+        font-size: 1.7rem
+    }
+    h2 {
+        font-size: 1.35rem
+    }
+    .btn {
+        white-space: normal
+    }
+    .btn--lg {
+        padding: .8rem 1.2rem;
+        font-size: .95rem
+    }
+    /* Hide the text logo, keep the brand mark */
+    .logo__text {
+        display: none
+    }
+    /* Announcement bar: drop the separator, tighten type */
+    .announce {
+        font-size: .76rem
+    }
+    .announce__sep {
+        display: none
+    }
+    .announce__inner {
+        gap: .3rem 1rem
+    }
+    .hero__slide {
+        min-height: 320px
+    }
+    .hero__arrow {
+        width: 34px;
+        height: 34px;
+        font-size: .95rem
+    }
+    .hero__arrow--prev {
+        left: 8px
+    }
+    .hero__arrow--next {
+        right: 8px
+    }
+    .hero__dots {
+        bottom: 12px
+    }
+    .hero__cta .btn {
+        flex: 1
+    }
+    /* Product detail actions stack full-width */
+    .product__buy {
+        flex-direction: column;
+        gap: .6rem
+    }
+    .product__buy .btn {
+        min-width: 0;
+        width: 100%
+    }
+    .product__thumbs img {
+        width: 58px;
+        height: 72px
+    }
+    .product__price .price-now {
+        font-size: 1.5rem
+    }
+    .auth-wrap {
+        margin: 1.5rem auto
+    }
+    .auth-card {
+        padding: 1.4rem
+    }
+    .upi-card {
+        padding: 1.2rem
+    }
+    .upi-app {
+        height: 50px
+    }
+    .empty {
+        padding: 2.2rem 1rem
+    }
+}
+
+
+/* Cart: turn the table into stacked cards on phones */
+
+@media (max-width:640px) {
+    .cart-table {
+        min-width: 0
+    }
+    .cart-table thead {
+        display: none
+    }
+    .cart-table tbody tr {
+        display: block;
+        padding: .9rem 0;
+        border-top: 1px solid var(--line)
+    }
+    .cart-table tbody tr:first-child {
+        border-top: 0;
+        padding-top: 0
+    }
+    .cart-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: .3rem 0;
+        border: 0
+    }
+    .cart-table td::before {
+        content: attr(data-label);
+        font-size: .74rem;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: var(--muted);
+        font-weight: 600;
+        flex: none
+    }
+    .cart-table td.is-product,
+    .cart-table td.is-remove {
+        display: block;
+        padding: 0
+    }
+    .cart-table td.is-remove {
+        margin-top: .3rem;
+        text-align: right
+    }
+    .cart-table td.is-remove::before {
+        display: none
+    }
+}
+
+
+/* Footer & misc on phones */
+
+@media (max-width:760px) {
+    .site-footer {
+        margin-top: 2rem;
+        padding-top: 2rem
+    }
+    .footer__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.6rem 1.2rem
+    }
+    .footer__col:first-child {
+        grid-column: 1 / -1
+    }
+    .footer__bar-inner {
+        justify-content: center;
+        text-align: center
+    }
+    .breadcrumb {
+        font-size: .82rem;
+        overflow-wrap: anywhere
+    }
+    .toolbar {
+        padding: .6rem .8rem
+    }
+    .pagination a,
+    .pagination span {
+        min-width: 34px;
+        height: 34px
+    }
+}
+
+@media (max-width:480px) {
+    .footer__grid {
+        grid-template-columns: 1fr
+    }
+}

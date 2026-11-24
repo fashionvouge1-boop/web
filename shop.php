@@ -21,7 +21,7 @@ if ($q !== '') {
     $params[] = "%$q%";
 }
 if ($gender !== '') {
-    $where[] = '(p.gender = ? OR p.gender = "unisex")';
+    $where[] = "(p.gender = ? OR p.gender = 'unisex')";
     $params[] = $gender;
 }
 if ($catSlugs) {

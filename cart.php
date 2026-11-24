@@ -105,7 +105,7 @@ require __DIR__ . '/includes/header.php';
                             <tbody>
                             <?php foreach ($items as $row): $p = $row['product']; ?>
                                 <tr>
-                                    <td>
+                                    <td class="is-product">
                                         <div class="cart-item">
                                             <img src="<?= e(image_url($p['image'])) ?>" alt="<?= e($p['name']) ?>">
                                             <div>
@@ -120,16 +120,16 @@ require __DIR__ . '/includes/header.php';
                                             </div>
                                         </div>
                                     </td>
-                                    <td><?= money(product_price($p)) ?></td>
-                                    <td>
+                                    <td data-label="Price"><?= money(product_price($p)) ?></td>
+                                    <td data-label="Quantity">
                                         <div class="qty">
                                             <button type="button" data-step="down" aria-label="Decrease">&minus;</button>
                                             <input type="number" name="qty[<?= e($row['key']) ?>]" value="<?= (int)$row['qty'] ?>" min="1" max="<?= max(1, (int)$p['stock']) ?>">
                                             <button type="button" data-step="up" aria-label="Increase">+</button>
                                         </div>
                                     </td>
-                                    <td><strong><?= money($row['line_total']) ?></strong></td>
-                                    <td>
+                                    <td data-label="Total"><strong><?= money($row['line_total']) ?></strong></td>
+                                    <td class="is-remove">
                                         <button type="button" class="remove-link" data-cart-remove="<?= e($row['key']) ?>"
                                                 style="background:none;border:0;cursor:pointer" title="Remove">&times;</button>
                                     </td>
