@@ -14,14 +14,10 @@ services:
       - key: DB_PORT
         value: "26426"
       - key: DB_NAME
-        value: "defaultdb"
+        value: "stylehub"
       - key: DB_USER
         value: "avnadmin"
       - key: DB_PASS
         value: "AVNS_y07bZMmWRfZzTpVK7r4"
-      # Aiven requires SSL. Set DB_SSL=1 to use SSL (verify off) for testing.
-      # For production, set DB_SSL_CA to the Aiven ca.pem path instead.
-      - key: DB_SSL
-        value: "1"
       - key: APP_DEBUG
         value: "1"
