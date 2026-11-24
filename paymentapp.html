@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Payment Method · StyleHub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        /* Page-specific tweaks that layer on top of the shared StyleHub stylesheet. */
+        
+        body {
+            background: var(--bg-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+        
+        .payapp {
+            width: 100%;
+            max-width: 430px;
+        }
+        
+        .payapp__brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--ink);
+            margin-bottom: 1.2rem;
+        }
+        
+        .payapp__brand span {
+            color: var(--accent)
+        }
+        
+        .payapp__note {
+            text-align: center;
+            font-size: .8rem;
+            color: var(--muted);
+            margin-top: 1rem
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="payapp">
+        <div class="payapp__brand">Style<span>Hub</span> Checkout</div>
+
+        <div class="panel upi-card">
+            <div class="upi-head">
+                <h2>Complete your payment</h2>
+                <p class="muted">Choose an app to continue. Confirm the payment inside the app.</p>
+            </div>
+
+            <div class="upi-amount">
+                <span class="muted">Amount to pay</span>
+                <strong id="orderAmount">₹1.00</strong>
+            </div>
+
+            <div class="upi-apps">
+                <a class="upi-app upi-app--gpay" href="#" data-app="Google Pay" onclick="return payNow(event,'googlepay')">
+                    <span class="upi-app__icon" aria-hidden="true">&#128241;</span>
+                    <span class="upi-app__label">Pay with Google Pay</span>
+                </a>
+                <a class="upi-app upi-app--phonepe" href="#" data-app="PhonePe" onclick="return payNow(event,'phonepe')">
+                    <span class="upi-app__icon" aria-hidden="true">&#128179;</span>
+                    <span class="upi-app__label">Pay with PhonePe</span>
+                </a>
+                <a class="upi-app upi-app--paytm" href="#" data-app="Paytm" onclick="return payNow(event,'paytm')">
+                    <span class="upi-app__icon" aria-hidden="true">&#128176;</span>
+                    <span class="upi-app__label">Pay with Paytm</span>
+                </a>
+                <a class="upi-app upi-app--any" href="#" data-app="your UPI app" onclick="return payNow(event,'upi')">
+                    <span class="upi-app__icon" aria-hidden="true">&#128273;</span>
+                    <span class="upi-app__label">Pay with any UPI app</span>
+                </a>
+            </div>
+
+            <p id="paymentStatus" class="upi-status" role="status"></p>
+
+            <div class="upi-qr">
+                <p class="muted" style="font-size:.8rem;margin:.4rem 0">On a computer? Scan this QR with any UPI app.</p>
+                <img id="qrCode" src="" width="200" height="200" alt="UPI payment QR code" onerror="this.parentNode.style.display='none'">
+                <p class="muted" style="font-size:.78rem;margin:.4rem 0">Or pay to UPI ID: <strong id="upiId">your-vpa@yourbank</strong></p>
+            </div>
+        </div>
+
+        <p class="payapp__note">Order <strong id="orderId">ORD0001</strong> · Payments are secured by your UPI app.</p>
+    </div>
+
+    <script>
+        // Replace these defaults with values from your website, or pass them in
+        // the URL, e.g. paymentapp.html?order=ORD123&amount=499&merchant=My%20Store&vpa=store@bank
+        const DEFAULT_CONFIG = {
+            merchantName: "StyleHub",
+            upiId: "your-vpa@yourbank",
+            orderId: "ORD0001",
+            amount: "1.00"
+        };
+
+        const query = new URLSearchParams(window.location.search);
+        const paymentConfig = {
+            merchantName: query.get("merchant") || DEFAULT_CONFIG.merchantName,
+            upiId: query.get("vpa") || DEFAULT_CONFIG.upiId,
+            orderId: query.get("order") || DEFAULT_CONFIG.orderId,
+            amount: query.get("amount") || DEFAULT_CONFIG.amount
+        };
+
+        document.getElementById("orderId").textContent = paymentConfig.orderId;
+        document.getElementById("upiId").textContent = paymentConfig.upiId;
+
+        const amount = Number(paymentConfig.amount);
+        if (!Number.isFinite(amount) || amount <= 0) {
+            document.getElementById("paymentStatus").textContent = "Invalid payment amount.";
+            throw new Error("Invalid payment amount");
+        }
+
+        document.getElementById("orderAmount").textContent =
+            "₹" + amount.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+        // Build the standard UPI parameters (NPCI spec).
+        const upiParams = new URLSearchParams({
+            pa: paymentConfig.upiId,
+            pn: paymentConfig.merchantName,
+            tr: paymentConfig.orderId.replace(/[^A-Za-z0-9]/g, ""),
+            tn: "Payment for order " + paymentConfig.orderId,
+            am: amount.toFixed(2),
+            cu: "INR"
+        }).toString();
+
+        document.getElementById("qrCode").src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" +
+            encodeURIComponent("upi://pay?" + upiParams);
+
+        function payNow(event, app) {
+            event.preventDefault();
+            if (navigator.vibrate) navigator.vibrate(40);
+
+            const status = document.getElementById("paymentStatus");
+            const label = app === "googlepay" ? "Google Pay" :
+                app === "phonepe" ? "PhonePe" :
+                app === "paytm" ? "Paytm" : "your UPI app";
+            status.textContent = "Opening " + label + "…";
+
+            let redirectUrl;
+            if (app === "phonepe") {
+                redirectUrl = "phonepe://pay?" + upiParams;
+            } else if (app === "paytm") {
+                redirectUrl = "paytmmp://pay?" + upiParams;
+            } else if (app === "googlepay") {
+                redirectUrl = "tez://upi/pay?" + upiParams;
+            } else {
+                redirectUrl = "upi://pay?" + upiParams;
+            }
+
+            // Custom-app schemes only work on supported mobile devices.
+            window.location.href = redirectUrl;
+
+            setTimeout(function() {
+                status.textContent = "If no app opened, install the selected app or scan the QR code above.";
+            }, 2500);
+
+            return false;
+        }
+    </script>
+
+</body>
+
+</html>

@@ -134,6 +134,7 @@ require __DIR__ . '/includes/header.php';
                                         echo [
                                             'cod'      => 'Pay with cash when your order is delivered.',
                                             'demo'     => 'Sandbox gateway — simulates a successful card / UPI payment.',
+                                            'upi'      => 'Pay instantly with Google Pay, PhonePe or Paytm.',
                                             'razorpay' => 'Pay securely with cards, UPI, netbanking &amp; wallets.',
                                             'stripe'   => 'Pay securely with international cards.',
                                         ][$code] ?? 'Secure online payment.';

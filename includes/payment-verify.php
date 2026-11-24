@@ -30,6 +30,15 @@ function verify_payment(string $code, array $order, array $params): array
         case 'cod':
             return ['status' => 'pending', 'ref' => $order['payment_ref'] ?? null, 'message' => 'Payment due on delivery.'];
 
+        case 'upi':
+            // Direct UPI app deep links have no server-side callback, so the
+            // customer confirms on the UPI page. For production, integrate a
+            // UPI payment provider (e.g. Razorpay/Cashfree) and verify via webhook.
+            if (($params['upi'] ?? '') === 'done') {
+                return ['status' => 'paid', 'ref' => $order['payment_ref'] ?: ('UPI-' . $order['order_number']), 'message' => 'Customer confirmed UPI payment.'];
+            }
+            return ['status' => 'pending', 'ref' => $order['payment_ref'] ?? null, 'message' => 'Awaiting UPI payment.'];
+
         case 'razorpay':
             $secret    = (string)($cfg['key_secret'] ?? '');
             $paymentId = (string)($params['razorpay_payment_id'] ?? '');

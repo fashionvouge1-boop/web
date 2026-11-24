@@ -101,6 +101,24 @@ class DemoGateway extends BaseGateway
 }
 
 /* --------------------------------------------------------------------- *
+ *  UPI Apps — Google Pay / PhonePe / Paytm deep links (no API keys needed).
+ *  Order is created as "pending" and settled on the dedicated UPI page.
+ * --------------------------------------------------------------------- */
+class UpiGateway extends BaseGateway
+{
+    public function code(): string { return 'upi'; }
+
+    public function pay(array $order): array
+    {
+        return [
+            'status'   => 'pending',
+            'ref'      => 'UPI-' . $order['order_number'],
+            'redirect' => 'payment-upi.php?order=' . urlencode($order['order_number']),
+        ];
+    }
+}
+
+/* --------------------------------------------------------------------- *
  *  Razorpay — real integration (enable + add keys in config.php).
  * --------------------------------------------------------------------- */
 class RazorpayGateway extends BaseGateway
@@ -223,6 +241,7 @@ function instantiate_gateway(string $code, array $cfg): PaymentGatewayInterface
     switch ($code) {
         case 'cod':      return new CodGateway($cfg);
         case 'demo':     return new DemoGateway($cfg);
+        case 'upi':      return new UpiGateway($cfg);
         case 'razorpay': return new RazorpayGateway($cfg);
         case 'stripe':   return new StripeGateway($cfg);
         default:         throw new RuntimeException('Unknown gateway: ' . $code);

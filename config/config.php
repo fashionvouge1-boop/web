@@ -55,6 +55,14 @@ $GATEWAYS = [
         'enabled' => true,
         'mode'    => 'sandbox',   // simulates a successful payment
     ],
+    'upi' => [
+        'label'   => 'UPI Apps (Google Pay, PhonePe, Paytm)',
+        'enabled' => true,
+        'mode'    => 'live',
+        // Your business UPI ID (VPA) that receives the money.
+        'vpa'     => 'stylehub@upi',
+        'payee'   => SITE_NAME,
+    ],
     'razorpay' => [
         'label'   => 'Razorpay',
         'enabled' => false,       // set to true after adding keys
