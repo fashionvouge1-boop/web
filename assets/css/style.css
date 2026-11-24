@@ -626,6 +626,95 @@ button {
     font-weight: 500
 }
 
+/* ---------- Promo banners ---------- */
+.promo-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 1.1rem
+}
+
+.promo-banner {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    height: 280px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    padding: 1.6rem;
+    color: #fff;
+    transition: transform .25s, box-shadow .25s
+}
+
+.promo-banner:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow)
+}
+
+.promo-banner--women {
+    background: linear-gradient(135deg, #be185d 0%, #f472b6 100%)
+}
+
+.promo-banner--men {
+    background: linear-gradient(135deg, #0f172a 0%, #475569 100%)
+}
+
+.promo-banner__inner {
+    max-width: 80%
+}
+
+.promo-banner__tag {
+    display: inline-block;
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    background: rgba(255, 255, 255, .2);
+    padding: .25rem .7rem;
+    border-radius: 999px;
+    margin-bottom: .7rem
+}
+
+.promo-banner__title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin: 0 0 .4rem;
+    font-family: var(--font-head)
+}
+
+.promo-banner__text {
+    font-size: .9rem;
+    opacity: .9;
+    margin: 0 0 1rem
+}
+
+.promo-banner__cta {
+    display: inline-block;
+    font-weight: 600;
+    font-size: .92rem;
+    background: #fff;
+    color: var(--ink);
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    transition: transform .2s
+}
+
+.promo-banner:hover .promo-banner__cta {
+    transform: translateX(3px)
+}
+
+@media (max-width: 700px) {
+    .promo-grid {
+        grid-template-columns: 1fr
+    }
+    .promo-banner {
+        height: 220px
+    }
+    .promo-banner__inner {
+        max-width: 100%
+    }
+}
+
 
 /* ---------- Product grid / card ---------- */
 

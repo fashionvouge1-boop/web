@@ -114,14 +114,22 @@ require __DIR__ . '/includes/header.php';
 
 <!-- ============ PROMO BANNER ============ -->
 <section class="container section">
-    <div class="cat-grid" style="grid-template-columns:1.6fr 1fr">
-        <a class="cat-tile" style="height:280px" href="<?= e(url('shop.php?gender=women')) ?>">
-            <img loading="lazy" src="<?= e($heroImg('stylish woman with handbag and dress, fashion promotional banner wide')) ?>" alt="Women's edit">
-            <span class="cat-tile__label"><span>Women's Edit</span><small>Shop now &rarr;</small></span>
+    <div class="promo-grid">
+        <a class="promo-banner promo-banner--women" href="<?= e(url('shop.php?gender=women')) ?>">
+            <div class="promo-banner__inner">
+                <span class="promo-banner__tag">New Arrivals</span>
+                <h3 class="promo-banner__title">Women's Edit</h3>
+                <p class="promo-banner__text">Dresses, tops, handbags &amp; more — curated for her.</p>
+                <span class="promo-banner__cta">Shop now &rarr;</span>
+            </div>
         </a>
-        <a class="cat-tile" style="height:280px" href="<?= e(url('shop.php?gender=men')) ?>">
-            <img loading="lazy" src="<?= e($heroImg('stylish man with watch and shoes, menswear promotional banner')) ?>" alt="Men's edit">
-            <span class="cat-tile__label"><span>Men's Edit</span><small>Shop now &rarr;</small></span>
+        <a class="promo-banner promo-banner--men" href="<?= e(url('shop.php?gender=men')) ?>">
+            <div class="promo-banner__inner">
+                <span class="promo-banner__tag">New Arrivals</span>
+                <h3 class="promo-banner__title">Men's Edit</h3>
+                <p class="promo-banner__text">Shirts, denim, shoes &amp; watches — built for him.</p>
+                <span class="promo-banner__cta">Shop now &rarr;</span>
+            </div>
         </a>
     </div>
 </section>
