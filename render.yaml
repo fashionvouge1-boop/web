@@ -1,0 +1,27 @@
+# Render Blueprint — deploy StyleHub (PHP + MySQL) as a Docker web service.
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: stylehub
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: DB_HOST
+        value: "mysql-fashion-fashionvouge1-f958.g.aivencloud.com"
+      - key: DB_PORT
+        value: "26426"
+      - key: DB_NAME
+        value: "defaultdb"
+      - key: DB_USER
+        value: "avnadmin"
+      - key: DB_PASS
+        value: "AVNS_y07bZMmWRfZzTpVK7r4"
+      # Aiven requires SSL. Set DB_SSL=1 to use SSL (verify off) for testing.
+      # For production, set DB_SSL_CA to the Aiven ca.pem path instead.
+      - key: DB_SSL
+        value: "1"
+      - key: APP_DEBUG
+        value: "1"

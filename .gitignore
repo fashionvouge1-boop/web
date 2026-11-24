@@ -1,0 +1,11 @@
+# Local editor history (Trae keeps a copy of every file here)
+.history/
+
+# Environment / secrets
+.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,19 @@
+# StyleHub — robots.txt
+User-agent: *
+Allow: /
+
+# Private / transactional areas — keep out of search engines
+Disallow: /admin/
+Disallow: /account/
+Disallow: /config/
+Disallow: /includes/
+Disallow: /cart.php
+Disallow: /checkout.php
+Disallow: /payment.php
+Disallow: /payment-success.php
+Disallow: /coupon.php
+Disallow: /review.php
+Disallow: /wishlist.php
+
+# Update the host below to your real domain before going live.
+Sitemap: https://stylehub.test/sitemap.php

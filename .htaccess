@@ -1,0 +1,12 @@
+# StyleHub — Apache configuration (ignored by the PHP built-in server)
+
+# Deny direct access to sensitive files
+<FilesMatch "\.(sql|md|log|ini|json)$">
+    Require all denied
+</FilesMatch>
+
+# Deny direct access to the config and includes directories
+RedirectMatch 404 ^/(config|includes)/
+
+# Friendly error page (adjust the path if the site lives in a sub-folder)
+ErrorDocument 404 /404.php
