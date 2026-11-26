@@ -60,7 +60,7 @@ $GATEWAYS = [
         'enabled' => true,
         'mode'    => 'live',
         // Your business UPI ID (VPA) that receives the money.
-        'vpa'     => 'stylehub@upi',
+        'vpa'     => 'jilusanepara-7@okicici',
         'payee'   => SITE_NAME,
     ],
     'razorpay' => [

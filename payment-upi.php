@@ -3,8 +3,8 @@
  * UPI payment page.
  *
  * Shown after the customer places an order with the "UPI Apps" method.
- * Displays the full order summary and lets the shopper open Google Pay,
- * PhonePe, Paytm (or any UPI app) with the amount pre-filled, then confirm.
+ * Displays the full order summary and lets the shopper open PhonePe or
+ * Paytm with the amount pre-filled, then confirm the payment.
  */
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/payment.php';
@@ -55,8 +55,6 @@ $payee   = (string)($upiCfg['payee'] ?? SITE_NAME);
             'am' => number_format($amount, 2, '.', ''),
             'cu' => 'INR',
         ]);
-        $upiUri    = 'upi://pay?' . $upiParams;
-        $qrSrc     = 'https://api.qrserver.com/v1/create-qr-code/?size=230x230&data=' . urlencode($upiUri);
         $isPaid    = $order['payment_status'] === 'paid';
         ?>
 
@@ -80,10 +78,6 @@ $payee   = (string)($upiCfg['payee'] ?? SITE_NAME);
                 </div>
 
                 <div class="upi-apps">
-                    <a class="upi-app upi-app--gpay" href="tez://upi/pay?<?= e($upiParams) ?>" data-app="Google Pay">
-                        <span class="upi-app__icon" aria-hidden="true">&#128241;</span>
-                        <span class="upi-app__label">Pay with Google Pay</span>
-                    </a>
                     <a class="upi-app upi-app--phonepe" href="phonepe://pay?<?= e($upiParams) ?>" data-app="PhonePe">
                         <span class="upi-app__icon" aria-hidden="true">&#128179;</span>
                         <span class="upi-app__label">Pay with PhonePe</span>
@@ -92,20 +86,9 @@ $payee   = (string)($upiCfg['payee'] ?? SITE_NAME);
                         <span class="upi-app__icon" aria-hidden="true">&#128176;</span>
                         <span class="upi-app__label">Pay with Paytm</span>
                     </a>
-                    <a class="upi-app upi-app--any" href="<?= e($upiUri) ?>" data-app="your UPI app">
-                        <span class="upi-app__icon" aria-hidden="true">&#128273;</span>
-                        <span class="upi-app__label">Pay with any UPI app</span>
-                    </a>
                 </div>
 
                 <p id="upiStatus" class="upi-status" role="status"></p>
-
-                <div class="upi-qr">
-                    <p class="muted" style="font-size:.8rem;margin:.4rem 0">On a computer? Scan this QR with any UPI app.</p>
-                    <img src="<?= e($qrSrc) ?>" width="230" height="230" alt="UPI payment QR code"
-                         onerror="this.parentNode.style.display='none'">
-                    <p class="muted" style="font-size:.78rem;margin:.4rem 0">Or pay to UPI ID: <strong><?= e($vpa) ?></strong></p>
-                </div>
             </div>
 
             <!-- ============ ORDER SUMMARY ============ -->
@@ -150,26 +133,82 @@ $payee   = (string)($upiCfg['payee'] ?? SITE_NAME);
                     <?php if ($isPaid): ?>
                         <a class="btn btn--accent btn--block btn--lg" href="<?= e(url('payment-success.php?order=' . urlencode($order['order_number']))) ?>">View order confirmation</a>
                     <?php else: ?>
-                        <a class="btn btn--accent btn--block btn--lg" href="<?= e(url('payment-success.php?order=' . urlencode($order['order_number']) . '&upi=done')) ?>">I've completed the payment</a>
-                        <a class="btn btn--outline btn--block" href="<?= e(url('checkout.php')) ?>">Cancel &amp; go back</a>
+                        <a class="btn btn--accent btn--block btn--lg" id="paidBtn" href="<?= e(url('payment-success.php?order=' . urlencode($order['order_number']) . '&upi=done')) ?>">I've completed the payment</a>
+                        <a class="btn btn--outline btn--block" id="cancelBtn" href="<?= e(url('checkout.php')) ?>">Cancel &amp; go back</a>
                     <?php endif; ?>
                 </div>
                 <p class="muted text-center" style="font-size:.78rem;margin-top:.8rem">&#128274; Payments are secured by your UPI app.</p>
             </aside>
         </div>
+
+        <?php if (!$isPaid): ?>
+        <!-- Leave-without-paying warning -->
+        <div class="pay-guard" id="leaveGuard" role="dialog" aria-modal="true" aria-labelledby="guardTitle">
+            <div class="pay-guard__box">
+                <h3 id="guardTitle">Order not placed!</h3>
+                <p>You haven't completed the payment yet. If you leave now, your order will <strong>not</strong> be placed.</p>
+                <div class="pay-guard__actions">
+                    <button type="button" class="btn btn--accent btn--block btn--lg" id="guardStay">Stay &amp; pay</button>
+                    <a class="btn btn--outline btn--block" id="guardLeave" href="<?= e(url('checkout.php')) ?>">Leave without paying</a>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
 
 <script>
-/* Give quick feedback when a shopper taps an app button. */
-document.querySelectorAll('.upi-app').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-        var status = document.getElementById('upiStatus');
-        var app = btn.getAttribute('data-app') || 'your UPI app';
-        if (status) status.textContent = 'Opening ' + app + '… confirm the payment there, then tap "I\'ve completed the payment".';
-        if (navigator.vibrate) navigator.vibrate(40);
+(function () {
+    var done = false;      // customer confirmed the payment
+    var opening = false;   // a UPI app is being launched right now
+    var leaving = false;   // customer chose to leave without paying
+    var guard = document.getElementById('leaveGuard');
+    var status = document.getElementById('upiStatus');
+
+    /* Feedback while a UPI app opens. */
+    document.querySelectorAll('.upi-app').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            opening = true;
+            setTimeout(function () { opening = false; }, 2500);
+            var app = btn.getAttribute('data-app') || 'your app';
+            if (status) status.textContent = 'Opening ' + app + '… confirm the payment there, then tap "I\'ve completed the payment".';
+            if (navigator.vibrate) navigator.vibrate(40);
+        });
     });
-});
+
+    /* Confirming payment — let navigation through freely. */
+    var paidBtn = document.getElementById('paidBtn');
+    if (paidBtn) paidBtn.addEventListener('click', function () { done = true; });
+
+    if (!guard) return;
+
+    function showGuard() { guard.classList.add('is-open'); }
+    function hideGuard() { guard.classList.remove('is-open'); }
+
+    /* Cancel button → warn instead of leaving. */
+    var cancelBtn = document.getElementById('cancelBtn');
+    if (cancelBtn) cancelBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        showGuard();
+    });
+    document.getElementById('guardStay').addEventListener('click', hideGuard);
+    document.getElementById('guardLeave').addEventListener('click', function () { leaving = true; });
+
+    /* Browser / device back button → warn. */
+    history.pushState({ pay: 1 }, '', location.href);
+    window.addEventListener('popstate', function () {
+        if (done || leaving || opening) return;
+        history.pushState({ pay: 1 }, '', location.href);
+        showGuard();
+    });
+
+    /* Closing or refreshing the tab → native warning. */
+    window.addEventListener('beforeunload', function (e) {
+        if (done || leaving || opening) return;
+        e.preventDefault();
+        e.returnValue = '';
+    });
+})();
 </script>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>
