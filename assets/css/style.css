@@ -645,7 +645,18 @@ button {
     box-shadow: var(--shadow-sm);
     padding: 1.6rem;
     color: #fff;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     transition: transform .25s, box-shadow .25s
+}
+
+.promo-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 23, 42, .1) 35%, rgba(15, 23, 42, .82) 100%);
+    z-index: 0
 }
 
 .promo-banner:hover {
@@ -662,6 +673,8 @@ button {
 }
 
 .promo-banner__inner {
+    position: relative;
+    z-index: 1;
     max-width: 80%
 }
 
@@ -2507,17 +2520,23 @@ label {
     .section__head {
         margin-bottom: 1.2rem
     }
-    /* Header: keep everything on one comfortable row */
+    /* Header: burger + brand on the left, icons pushed to the right,
+       search drops to its own full-width row underneath */
     .header__inner {
         gap: .5rem;
         padding: .6rem 0
+    }
+    .header__burger,
+    .logo {
+        flex: none
     }
     .header__search {
         min-width: 0;
         margin-top: .35rem
     }
     .header__actions {
-        gap: .15rem
+        gap: .15rem;
+        margin-left: auto
     }
     .icon-btn {
         padding: .55rem
@@ -2597,9 +2616,9 @@ label {
         padding: .8rem 1.2rem;
         font-size: .95rem
     }
-    /* Hide the text logo, keep the brand mark */
+    /* Keep the brand name visible — just tighten it */
     .logo__text {
-        display: none
+        font-size: 1.05rem
     }
     /* Announcement bar: drop the separator, tighten type */
     .announce {
@@ -2750,5 +2769,26 @@ label {
 @media (max-width:480px) {
     .footer__grid {
         grid-template-columns: 1fr
+    }
+}
+
+
+/* ---------- Very small phones ---------- */
+
+@media (max-width:380px) {
+    .header__inner {
+        gap: .35rem
+    }
+    .logo__text {
+        display: none
+    }
+    .icon-btn {
+        padding: .45rem
+    }
+    .hero__content {
+        padding: 1.5rem 1.1rem
+    }
+    .promo-banner__title {
+        font-size: 1.4rem
     }
 }

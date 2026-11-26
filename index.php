@@ -7,6 +7,9 @@ $heroImg = function (string $prompt): string {
 $tileImg = function (string $prompt): string {
     return 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?image_size=portrait_4_3&prompt=' . urlencode($prompt);
 };
+$promoImg = function (string $prompt): string {
+    return 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?image_size=landscape_4_3&prompt=' . urlencode($prompt);
+};
 
 $featured = db()->query('SELECT p.*, c.name AS category_name FROM products p
                          JOIN categories c ON c.id = p.category_id
@@ -115,7 +118,7 @@ require __DIR__ . '/includes/header.php';
 <!-- ============ PROMO BANNER ============ -->
 <section class="container section">
     <div class="promo-grid">
-        <a class="promo-banner promo-banner--women" href="<?= e(url('shop.php?gender=women')) ?>">
+        <a class="promo-banner promo-banner--women" href="<?= e(url('shop.php?gender=women')) ?>" style="background-image:url('<?= e($promoImg('editorial fashion photograph of a stylish young woman wearing a chic summer outfit, full body, soft studio lighting, fashion catalogue, no text, no words, no watermark')) ?>')">
             <div class="promo-banner__inner">
                 <span class="promo-banner__tag">New Arrivals</span>
                 <h3 class="promo-banner__title">Women's Edit</h3>
@@ -123,7 +126,7 @@ require __DIR__ . '/includes/header.php';
                 <span class="promo-banner__cta">Shop now &rarr;</span>
             </div>
         </a>
-        <a class="promo-banner promo-banner--men" href="<?= e(url('shop.php?gender=men')) ?>">
+        <a class="promo-banner promo-banner--men" href="<?= e(url('shop.php?gender=men')) ?>" style="background-image:url('<?= e($promoImg('editorial fashion photograph of a stylish young man wearing smart casual clothing, full body, soft studio lighting, menswear catalogue, no text, no words, no watermark')) ?>')">
             <div class="promo-banner__inner">
                 <span class="promo-banner__tag">New Arrivals</span>
                 <h3 class="promo-banner__title">Men's Edit</h3>
